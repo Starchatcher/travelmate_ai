@@ -1,0 +1,277 @@
+Table TM_USER {
+  USER_ID number [pk, not null, increment]
+  USERNAME varchar(100) [not null]
+  PASSWORD varchar(200) [not null]
+  NICKNAME varchar(100)
+  EMAIL varchar(200)
+  PHONE varchar(40)
+  STATUS varchar(20) [not null]
+  ROLE varchar(20) [not null]
+  CREATED_AT date
+  UPDATED_AT date
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table TM_RESERVATION {
+  RESERVATION_ID number [pk, not null, increment]
+  USER_ID number
+  VENDOR_ITEM_ID number
+  RESERVATION_DATE date
+  STATUS varchar(20)
+  CREATED_AT date
+}
+
+
+Table TM_LOCATION {
+  LOCATION_ID number [pk, not null, increment]
+  NAME varchar(200)
+  REGION varchar(100)
+  COUNTRY varchar(100)
+  LATITUDE number
+  LONGITUDE number
+}
+
+Table TM_ITINERARY {
+  ITINERARY_ID number [pk, not null, increment]
+  USER_ID number
+  TITLE varchar(100)
+  START_DATE date
+  END_DATE date
+  CREATED_AT date
+}
+
+
+Table TM_ITINERARY_DETAIL {
+  DETAIL_ID number [pk, not null, increment]
+  ITINERARY_ID number
+  PLAN_DATE date
+  PLAN_TIME varchar(5)
+  LOCATION_ID number
+  MEMO varchar(250)
+}
+
+
+Table TM_CODE {
+  code_id int [pk, increment]
+  code_type varchar(255)
+  code_value varchar(255)
+  code_name varchar(255)
+  description varchar(255)
+}
+
+Table TM_POINT {
+  point_id int [pk, increment]
+  user_id int
+  change_type varchar(100)
+  amount int
+  description varchar(255)
+  changed_at date
+}
+
+
+Table tm_kpi_log {
+  kpi_id int [pk, increment]
+  user_id int
+  metric varchar(100)
+  value int
+  logged_at date
+}
+
+
+Table tm_ai_recommend_log {
+  log_id int [pk, increment]
+  user_id int
+  recommend_type varchar(100)
+  result_id int
+  result_type varchar(100)
+  context clob
+  feedback varchar(10)
+  recommended_at date
+  emotion_tags varchar(1000)
+  user_input varchar(2000)
+}
+
+
+Table tm_report {
+  report_id int [pk, increment]
+  reporter_id int
+  target_id int
+  target_type varchar(100)
+  reason varchar(255)
+  created_at date
+}
+
+
+Table tm_friend {
+  friend_id int [pk, increment]
+  user_id int
+  friend_user_id int
+  status varchar(100)
+  added_at date
+}
+
+
+Table tm_log {
+  log_id int [pk, increment]
+  user_id int
+  action varchar(100)
+  target_type varchar(100)
+  target_id int
+  logged_at date
+}
+
+
+Table tm_vendor_category {
+  category_id int [pk, increment]
+  category_name varchar(255)
+  description varchar(255)
+}
+
+Table tm_vendor {
+  vendor_id int [pk, increment]
+  name varchar(255)
+  description varchar(255)
+  category_id int
+}
+
+
+Table tm_vendor_item {
+  item_id int [pk, increment]
+  vendor_id int
+  name varchar(255)
+  type varchar(100)
+  description varchar(255)
+}
+
+
+Table tm_vendor_booking_link {
+  link_id int [pk, increment]
+  item_id int
+  url varchar(500)
+  platform varchar(100)
+}
+
+
+// TM_REVIEW
+Table TM_REVIEW {
+  REVIEW_ID number [pk, not null, increment]
+  USER_ID number
+  LOCATION_ID number
+  RATING number
+  COMMENT varchar(1000)
+  CREATED_AT date
+}
+
+
+// TM_BOARD
+Table TM_BOARD {
+  BOARD_ID number [pk, not null, increment]
+  USER_ID number
+  TITLE varchar(255)
+  CONTENT clob
+  CATEGORY varchar(50)
+  LIKE_COUNT number
+  IS_SECRET boolean
+  IS_DELETED boolean
+  CREATED_AT date
+}
+
+
+// TM_REPLY
+Table TM_REPLY {
+  REPLY_ID number [pk, not null, increment]
+  BOARD_ID number
+  USER_ID number
+  PARENT_REPLY_ID number
+  CONTENT varchar(1000)
+  CREATED_AT date
+}
+
+
+// TM_LIKE
+Table TM_LIKE {
+  LIKE_ID number [pk, not null, increment]
+  USER_ID number
+  TARGET_TYPE varchar(30)
+  TARGET_ID number
+  CREATED_AT date
+}
+
+
+// TM_IMAGE
+Table TM_IMAGE {
+  IMAGE_ID number [pk, not null, increment]
+  USER_ID number
+  TARGET_TYPE varchar(30)
+  TARGET_ID number
+  ORIGINAL_FILENAME varchar(255)
+  STORED_FILENAME varchar(255)
+  FILE_PATH varchar(500)
+  CREATED_AT date
+}
+
+
+// TM_BOOKMARK
+Table TM_BOOKMARK {
+  BOOKMARK_ID number [pk, not null, increment]
+  USER_ID number
+  TARGET_TYPE varchar(30)
+  TARGET_ID number
+  CREATED_AT date
+}
+
+
+// TM_WEATHER
+Table TM_WEATHER {
+  WEATHER_ID number [pk, not null, increment]
+  LOCATION_ID number
+  DATE date
+  WEATHER varchar(50)
+  TEMP number
+  HUMIDITY number
+  PRECIPITATION number
+  DUST_LEVEL varchar(50)
+}
+
+
+// TM_STATS
+Table TM_STATS {
+  STATS_ID number [pk, not null, increment]
+  USER_ID number
+  ACTION_TYPE varchar(50)
+  TARGET_TYPE varchar(50)
+  TARGET_ID number
+  ACTION_AT date
+}
+
+
+// TM_SOCIAL_LOGIN
+Table TM_SOCIAL_LOGIN {
+  SOCIAL_ID number [pk, not null, increment]
+  USER_ID number
+  PROVIDER varchar(50)
+  PROVIDER_ID varchar(100)
+}
+
+
+// TM_ADMIN_REPLY_LOG
+Table TM_ADMIN_REPLY_LOG {
+  LOG_ID number [pk, not null, increment]
+  ADMIN_ID number
+  TARGET_TYPE varchar(50)
+  TARGET_ID number
+  CONTENT varchar(1000)
+  CREATED_AT date
+}

@@ -1,0 +1,9 @@
+✅ SQL 풀버전 생성 순서 (DDL 기반)
+
+순서	단계	설명
+1	🔻 DROP TABLE, DROP SEQUENCE, DROP TRIGGER	기존 객체 삭제 → 오류 없이 다시 생성하려면 필수
+2	📦 CREATE TABLE	모든 테이블 생성 (외래키는 아직 X)
+3	🔁 CREATE SEQUENCE	PK 자동 증가용 시퀀스 생성
+4	⚡ CREATE TRIGGER	PK 자동 생성 트리거 생성 (BEFORE INSERT)
+5	🔗 ALTER TABLE ... ADD CONSTRAINT FOREIGN KEY	FK(외래키) 제약조건은 테이블 구조 다 잡힌 후 별도로 추가
+(선택)	🔐 CREATE INDEX, COMMENT ON, GRANT 등	인덱스나 주석, 권한 추가는 이 단계에서 정리해도 좋아

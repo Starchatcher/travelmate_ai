@@ -1,0 +1,323 @@
+// TravelMate_AI 프로젝트 ERD - 상세 구현 버전
+Table TM_USER {
+  user_id NUMBER(10) [pk, increment]
+  username VARCHAR2(50) [unique, not null]
+  password VARCHAR2(255) [not null]
+  name VARCHAR2(50) [not null]
+  email VARCHAR2(100) [unique, not null]
+  phone_number VARCHAR2(20) [null]
+  birth_date DATE [null]
+  gender CHAR(1) [null, note: 'M/F']
+  status VARCHAR2(20) [not null, default: 'ACTIVE', note: 'ACTIVE, BLOCKED, DELETED']
+  role VARCHAR2(20) [not null, default: 'USER', note: 'USER, ADMIN']
+  created_at TIMESTAMP [not null, default: 'SYSDATE']
+  updated_at TIMESTAMP [null]
+}
+
+Table TM_RESERVATION {
+  reservation_id NUMBER [pk, increment]
+  user_id NUMBER [not null]
+  reservation_type VARCHAR2(20) [not null]
+  target_name VARCHAR2(100) [not null]
+  reservation_date DATE [not null, default: 'SYSDATE']
+  checkin_date DATE [null]
+  checkout_date DATE [null]
+  price NUMBER [null, default: 0]
+  status_code VARCHAR2(10) [not null, default: 'ACTIVE']
+  memo VARCHAR2(500) [null]
+  reg_dt DATE [not null, default: 'SYSDATE']
+  mod_dt DATE [null]
+}
+
+Table TM_LOCATION {
+  location_id NUMBER [pk, increment]
+  location_name VARCHAR2(100) [not null]
+  location_type VARCHAR2(20) [not null]
+  country VARCHAR2(50) [null]
+  city VARCHAR2(50) [null]
+  address VARCHAR2(200) [null]
+  latitude NUMBER(10,6) [null]
+  longitude NUMBER(10,6) [null]
+  description VARCHAR2(500) [null]
+  reg_dt DATE [not null, default: 'SYSDATE']
+  mod_dt DATE [null]
+}
+
+Table TM_ITINERARY {
+  itinerary_id NUMBER [pk, increment]
+  user_id NUMBER [not null]
+  itinerary_name VARCHAR2(100) [not null]
+  start_date DATE [not null]
+  end_date DATE [not null]
+  is_ai_recommend CHAR(1) [not null, default: 'N', note: 'Y/N']
+  region_summary VARCHAR2(300) [null]
+  memo VARCHAR2(1000) [null]
+  reg_dt DATE [not null, default: 'SYSDATE']
+  mod_dt DATE [null]
+}
+
+Table TM_ITINERARY_DETAIL {
+  detail_id NUMBER [pk, increment]
+  itinerary_id NUMBER [not null]
+  location_id NUMBER [null]
+  title VARCHAR2(100) [not null]
+  memo VARCHAR2(1000) [null]
+  plan_date DATE [not null]
+  plan_time VARCHAR2(5) [null, note: 'hh:mm format']
+  stay_minutes NUMBER [null]
+  transport_mode VARCHAR2(20) [null]
+  is_booked CHAR(1) [not null, default: 'N', note: 'Y/N']
+  reg_dt DATE [not null, default: 'SYSDATE']
+  mod_dt DATE [null]
+}
+
+Table TM_REVIEW {
+  review_id NUMBER(10) [pk, increment]
+  user_id NUMBER(10) [not null]
+  title VARCHAR2(100) [not null]
+  content CLOB [null]
+  rating NUMBER(2,1) [not null, note: '0.0 to 5.0']
+  created_at DATE [not null, default: 'SYSDATE']
+  updated_at DATE [null]
+  is_deleted CHAR(1) [not null, default: 'N', note: 'Y/N']
+}
+
+Table TM_BOARD {
+  board_id NUMBER [pk, increment]
+  user_id NUMBER [not null]
+  category VARCHAR2(30) [not null]
+  title VARCHAR2(200) [not null]
+  content CLOB [not null]
+  like_count NUMBER [not null, default: 0]
+  view_count NUMBER [not null, default: 0]
+  is_secret CHAR(1) [not null, default: 'N', note: 'Y/N']
+  is_deleted CHAR(1) [not null, default: 'N', note: 'Y/N']
+  is_pinned CHAR(1) [not null, default: 'N', note: 'Y/N']
+  created_at DATE [not null, default: 'SYSDATE']
+  updated_at DATE [null]
+}
+
+Table TM_REPLY {
+  reply_id NUMBER(10) [pk, increment]
+  board_id NUMBER(10) [not null]
+  user_id NUMBER(10) [not null]
+  content VARCHAR2(1000) [not null]
+  created_at DATE [not null, default: 'SYSDATE']
+  updated_at DATE [null]
+  is_deleted CHAR(1) [not null, default: 'N', note: 'Y/N']
+  parent_reply_id NUMBER(10) [null]
+}
+
+Table TM_LIKE {
+  like_id NUMBER(10) [pk, increment]
+  target_type VARCHAR2(20) [not null, note: 'BOARD, REPLY']
+  target_id NUMBER(10) [not null]
+  user_id NUMBER(10) [not null]
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+}
+
+Table TM_IMAGE {
+  image_id NUMBER(10) [pk, increment]
+  target_type VARCHAR2(20) [not null, note: 'BOARD, LOCATION']
+  target_id NUMBER(10) [not null]
+  original_filename VARCHAR2(255) [not null]
+  stored_filename VARCHAR2(255) [unique, not null]
+  is_thumbnail CHAR(1) [not null, default: 'N', note: 'Y/N']
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+}
+
+Table TM_BOOKMARK {
+  bookmark_id NUMBER(10) [pk, increment]
+  user_id NUMBER(10) [not null]
+  target_type VARCHAR2(20) [not null, note: 'BOARD, LOCATION, ITINERARY']
+  target_id NUMBER(10) [not null]
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+}
+
+Table TM_WEATHER {
+  weather_id NUMBER(10) [pk, increment]
+  location_name VARCHAR2(100) [not null]
+  weather_date DATE [not null]
+  temp_min NUMBER(5,1) [null]
+  temp_max NUMBER(5,1) [null]
+  weather_desc VARCHAR2(50) [null]
+  precipitation NUMBER(5,1) [null]
+  snowfall NUMBER(5,1) [null]
+  humidity NUMBER(5,1) [null]
+  wind_speed NUMBER(5,1) [null]
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+  pm10 NUMBER(5,1) [null]
+  pm25 NUMBER(5,1) [null]
+}
+
+Table TM_STATS {
+  stats_id NUMBER [pk, increment]
+  user_id NUMBER [null]
+  category VARCHAR2(50) [not null]
+  target_id NUMBER [null]
+  count NUMBER [not null, default: 0]
+  stats_date DATE [not null, default: 'SYSDATE']
+  created_at DATE [not null, default: 'SYSDATE']
+  updated_at DATE [null]
+}
+
+Table TM_SOCIAL_LOGIN {
+  social_login_id NUMBER [pk, increment]
+  user_id NUMBER [not null]
+  provider VARCHAR2(20) [not null, note: 'KAKAO, NAVER, GOOGLE']
+  provider_id VARCHAR2(100) [unique, not null]
+  email VARCHAR2(100) [null]
+  profile_image VARCHAR2(200) [null]
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+}
+
+Table TM_ADMIN_REPLY_LOG {
+  reply_log_id NUMBER [pk, increment]
+  target_type VARCHAR2(20) [not null, note: 'BOARD, REVIEW, DRINK, RECIPE']
+  target_id NUMBER [not null]
+  admin_id NUMBER [not null]
+  content CLOB [not null]
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+  updated_at TIMESTAMP [null]
+  is_deleted CHAR(1) [not null, default: 'N', note: 'Y/N']
+}
+
+Table TM_CODE {
+  code_id NUMBER [pk, increment]
+  code_group VARCHAR2(50) [not null]
+  code VARCHAR2(50) [not null]
+  code_name VARCHAR2(100) [not null]
+  description VARCHAR2(255) [null]
+  use_yn CHAR(1) [not null, default: 'Y', note: 'Y/N']
+  created_at TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+  updated_at TIMESTAMP [null]
+}
+
+Table TM_POINT {
+  point_id NUMBER(19,0) [pk, increment]
+  user_id NUMBER(19,0) [not null]
+  point_change NUMBER(5,0) [not null]
+  point_reason_cd VARCHAR2(30) [not null]
+  point_desc VARCHAR2(200) [null]
+  created_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_KPI_LOG {
+  kpi_id NUMBER [pk, increment]
+  user_id NUMBER [null]
+  kpi_type VARCHAR2(50) [not null]
+  target_id NUMBER [null]
+  target_type VARCHAR2(30) [null]
+  kpi_count NUMBER [not null, default: 1]
+  occurred_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_AI_RECOMMEND_LOG {
+  recommend_log_id NUMBER [pk, increment]
+  user_id NUMBER [null]
+  recommend_type VARCHAR2(30) [not null]
+  result_id NUMBER [null]
+  result_type VARCHAR2(30) [null]
+  context CLOB [null]
+  emotion_tags VARCHAR2(1000) [null]
+  user_input VARCHAR2(2000) [null]
+  feedback VARCHAR2(10) [null, note: 'GOOD, BAD']
+  recommended_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_REPORT {
+  report_id NUMBER(10) [pk, increment]
+  target_type VARCHAR2(20) [not null, note: 'BOARD, REPLY']
+  target_id NUMBER(10) [not null]
+  report_reason VARCHAR2(100) [not null]
+  report_detail CLOB [null]
+  reporter_id NUMBER(10) [not null]
+  report_date DATE [not null, default: 'SYSDATE']
+  status VARCHAR2(20) [not null, default: 'ACTIVE']
+  admin_id NUMBER(10) [null]
+  resolve_date DATE [null]
+}
+
+Table TM_FRIEND {
+  friend_id NUMBER(10) [pk, increment]
+  requester_id NUMBER(10) [not null]
+  receiver_id NUMBER(10) [not null]
+  status VARCHAR2(20) [not null, default: 'ACTIVE', note: 'PENDING, ACCEPTED, REJECTED, BLOCKED']
+  request_date DATE [not null, default: 'SYSDATE']
+  response_date DATE [null]
+}
+
+Table TM_LOG {
+  log_id NUMBER(10) [pk, increment]
+  user_id NUMBER(10) [null]
+  action_type VARCHAR2(30) [not null]
+  target_type VARCHAR2(30) [null]
+  target_id NUMBER(10) [null]
+  description VARCHAR2(500) [null]
+  created_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_VENDOR {
+  vendor_id NUMBER [pk, increment]
+  name VARCHAR2(100) [unique, not null]
+  category VARCHAR2(30) [not null]
+  contact_email VARCHAR2(100) [null]
+  contact_phone VARCHAR2(20) [null]
+  registered_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_VENDOR_ITEM {
+  item_id NUMBER [pk, increment]
+  vendor_id NUMBER [not null]
+  name VARCHAR2(200) [not null]
+  category VARCHAR2(30) [not null]
+  region VARCHAR2(100) [null]
+  price NUMBER(10,2) [null]
+  description CLOB [null]
+  available CHAR(1) [not null, default: 'Y', note: 'Y/N']
+  registered_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_VENDOR_BOOKING_LINK {
+  link_id NUMBER [pk, increment]
+  item_id NUMBER [not null]
+  link_type VARCHAR2(30) [not null]
+  booking_url VARCHAR2(1000) [not null]
+  is_active CHAR(1) [not null, default: 'Y', note: 'Y/N']
+  created_at DATE [not null, default: 'SYSDATE']
+}
+
+Table TM_VENDOR_CATEGORY {
+  category_id NUMBER [pk, increment]
+  category_code VARCHAR2(50) [unique, not null]
+  category_name VARCHAR2(100) [not null]
+  description VARCHAR2(500) [null]
+  is_active CHAR(1) [not null, default: 'Y', note: 'Y/N']
+  created_at DATE [not null, default: 'SYSDATE']
+}
+
+// 관계 정의 (Ref)
+Ref: TM_RESERVATION.user_id > TM_USER.user_id
+Ref: TM_ITINERARY.user_id > TM_USER.user_id
+Ref: TM_ITINERARY_DETAIL.itinerary_id > TM_ITINERARY.itinerary_id
+Ref: TM_ITINERARY_DETAIL.location_id > TM_LOCATION.location_id
+Ref: TM_REVIEW.user_id > TM_USER.user_id
+Ref: TM_BOARD.user_id > TM_USER.user_id
+Ref: TM_REPLY.board_id > TM_BOARD.board_id
+Ref: TM_REPLY.user_id > TM_USER.user_id
+Ref: TM_REPLY.parent_reply_id > TM_REPLY.reply_id
+Ref: TM_LIKE.user_id > TM_USER.user_id
+Ref: TM_BOOKMARK.user_id > TM_USER.user_id
+Ref: TM_STATS.user_id > TM_USER.user_id
+Ref: TM_SOCIAL_LOGIN.user_id > TM_USER.user_id
+Ref: TM_POINT.user_id > TM_USER.user_id
+Ref: TM_KPI_LOG.user_id > TM_USER.user_id
+Ref: TM_AI_RECOMMEND_LOG.user_id > TM_USER.user_id
+Ref: TM_REPORT.reporter_id > TM_USER.user_id
+Ref: TM_REPORT.admin_id > TM_USER.user_id
+Ref: TM_FRIEND.requester_id > TM_USER.user_id
+Ref: TM_FRIEND.receiver_id > TM_USER.user_id
+Ref: TM_LOG.user_id > TM_USER.user_id
+Ref: TM_VENDOR_ITEM.vendor_id > TM_VENDOR.vendor_id
+Ref: TM_VENDOR_BOOKING_LINK.item_id > TM_VENDOR_ITEM.item_id
+Ref: TM_ADMIN_REPLY_LOG.admin_id > TM_USER.user_id
